@@ -19,13 +19,19 @@ const getVisibleTodos = (todos, filter) => {
 const mapStateToTodoListProps = (state, { match }) => ({
   todos: getVisibleTodos(state.todos, match.params.filter || 'all')
 });
+
+/*
 const mapDispatchToTodoListProps = dispatch => ({
   onTodoClick(id) {
     dispatch(toggleTodo(id));
   }
 });
+*/
+
+// we are saying add onTodoClick to props as a method
+// that maps to toggleTodo action creator
 const VisibleTodoList = withRouter(
-  connect(mapStateToTodoListProps, mapDispatchToTodoListProps)(TodoList)
+  connect(mapStateToTodoListProps, { onTodoClick: toggleTodo })(TodoList)
 );
 
 export default VisibleTodoList;
