@@ -1,9 +1,9 @@
 // action creators
-let nextTodoId = 0;
+import { v4 } from 'node-uuid';
 export const addTodo = text => ({
   type: 'ADD_TODO',
   text,
-  id: nextTodoId++
+  id: v4()
 });
 
 export const setVisibilityFilter = filter => ({
