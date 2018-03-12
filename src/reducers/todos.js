@@ -33,3 +33,17 @@ const todos = (state = [], action) => {
 };
 
 export default todos;
+
+// selector - returns a slice of state
+export const getVisibleTodos = (state, filter) => {
+  switch (filter) {
+    case 'all':
+      return state;
+    case 'active':
+      return state.filter(t => !t.completed);
+    case 'completed':
+      return state.filter(t => t.completed);
+    default:
+      throw new Error(`Unknown filter: ${filter}.`);
+  }
+};
