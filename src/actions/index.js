@@ -1,6 +1,7 @@
 // action creators
 import { v4 } from 'node-uuid';
 import * as api from '../api';
+import { getIsFetching } from '../reducers/';
 export const addTodo = text => ({
   type: 'ADD_TODO',
   text,
@@ -27,8 +28,19 @@ const receiveTodos = (filter, response) => ({
 // Now we are going to return a function that takes a dispatch callback
 // now we can call dispatch at any time in the function
 // this is a thunk - a function that returns another function
-export const fetchTodos = filter => async dispatch => {
+export const fetchTodos = filter => async (dispatch, getState) => {
+  if (getIsFetching(getState(), filter)) {
+    return Promise.resolve();
+  }
+
   dispatch(requestTodos(filter));
+
   const response = await api.fetchTodos(filter);
   dispatch(receiveTodos(filter, response));
+  /*
+  return api.fetchTodos(filter).then(response => {
+    dispatch(receiveTodos(filter, response));
+    console.log('done in action');
+  });
+  */
 };
