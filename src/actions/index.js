@@ -13,18 +13,6 @@ export const toggleTodo = id => ({
   id
 });
 
-const requestTodos = filter => ({
-  type: 'REQUEST_TODOS',
-  filter
-});
-
-// sync action creator - returns an object
-const receiveTodos = (filter, response) => ({
-  type: 'RECEIVE_TODOS',
-  response,
-  filter
-});
-
 // Now we are going to return a function that takes a dispatch callback
 // now we can call dispatch at any time in the function
 // this is a thunk - a function that returns another function
@@ -33,10 +21,24 @@ export const fetchTodos = filter => async (dispatch, getState) => {
     return Promise.resolve();
   }
 
-  dispatch(requestTodos(filter));
-
-  const response = await api.fetchTodos(filter);
-  dispatch(receiveTodos(filter, response));
+  dispatch({
+    type: 'FETCH_TODOS_REQUEST',
+    filter
+  });
+  try {
+    const response = await api.fetchTodos(filter);
+    dispatch({
+      type: 'FETCH_TODOS_SUCCESS',
+      response,
+      filter
+    });
+  } catch (error) {
+    dispatch({
+      type: 'FETCH_TODOS_FAILURE',
+      filter,
+      message: error.message || 'Something went wrong.'
+    });
+  }
   /*
   return api.fetchTodos(filter).then(response => {
     dispatch(receiveTodos(filter, response));
