@@ -11,10 +11,13 @@ export const addTodo = text => async dispatch => {
   });
 };
 
-export const toggleTodo = id => ({
-  type: 'TOGGLE_TODO',
-  id
-});
+export const toggleTodo = id => async dispatch => {
+  const response = await api.toggleTodo(id);
+  dispatch({
+    type: 'TOGGLE_TODO_SUCCESS',
+    response: normalize(response, schema.todo)
+  });
+};
 
 // Now we are going to return a function that takes a dispatch callback
 // now we can call dispatch at any time in the function
