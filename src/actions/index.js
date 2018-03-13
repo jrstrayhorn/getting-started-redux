@@ -1,12 +1,13 @@
 // action creators
-import { v4 } from 'node-uuid';
 import * as api from '../api';
 import { getIsFetching } from '../reducers/';
-export const addTodo = text => ({
-  type: 'ADD_TODO',
-  text,
-  id: v4()
-});
+export const addTodo = text => async dispatch => {
+  const response = await api.addTodo(text);
+  dispatch({
+    type: 'ADD_TODO_SUCCESS',
+    response
+  });
+};
 
 export const toggleTodo = id => ({
   type: 'TOGGLE_TODO',
