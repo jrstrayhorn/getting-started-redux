@@ -1,11 +1,13 @@
 // action creators
+import { normalize } from 'normalizr';
+import * as schema from './schema';
 import * as api from '../api';
 import { getIsFetching } from '../reducers/';
 export const addTodo = text => async dispatch => {
   const response = await api.addTodo(text);
   dispatch({
     type: 'ADD_TODO_SUCCESS',
-    response
+    response: normalize(response, schema.todo)
   });
 };
 
@@ -30,7 +32,7 @@ export const fetchTodos = filter => async (dispatch, getState) => {
     const response = await api.fetchTodos(filter);
     dispatch({
       type: 'FETCH_TODOS_SUCCESS',
-      response,
+      response: normalize(response, schema.arrayOfTodos),
       filter
     });
   } catch (error) {
