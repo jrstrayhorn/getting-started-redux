@@ -12,7 +12,7 @@ export const toggleTodo = id => ({
   id
 });
 
-export const requestTodos = filter => ({
+const requestTodos = filter => ({
   type: 'REQUEST_TODOS',
   filter
 });
@@ -24,6 +24,11 @@ const receiveTodos = (filter, response) => ({
   filter
 });
 
-// async action creator - returns a promise
-export const fetchTodos = filter =>
-  api.fetchTodos(filter).then(response => receiveTodos(filter, response));
+// Now we are going to return a function that takes a dispatch callback
+// now we can call dispatch at any time in the function
+// this is a thunk - a function that returns another function
+export const fetchTodos = filter => async dispatch => {
+  dispatch(requestTodos(filter));
+  const response = await api.fetchTodos(filter);
+  dispatch(receiveTodos(filter, response));
+};
